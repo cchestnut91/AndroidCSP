@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="52dp"
+    android:orientation="horizontal"
+    android:padding="5dip" >
+
+    <!--  ListRow Left sied Thumbnail image -->
+    <LinearLayout android:id="@+id/thumbnail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="3dip"
+        android:layout_alignParentLeft="true"
+        android:layout_marginRight="5dip">
+
+        <ImageView
+            android:id="@+id/main_menu_list_image"
+            android:layout_marginLeft="20dp"
+            android:layout_width="35dip"
+            android:layout_height="35dip"
+            android:contentDescription="@string/pin_description"
+            android:scaleType="centerCrop" />
+
+    </LinearLayout>
+
+    <!-- Title Of Song-->
+    <TextView
+        android:id="@+id/main_menu_list_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Locations Near Me"
+        android:textColor="#FFFFFF"
+        android:typeface="sans"
+        android:textSize="17dip"
+        android:textStyle="bold"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@+id/thumbnail"
+        android:layout_marginLeft="12dp"
+        android:layout_alignParentEnd="true" />
+
+</RelativeLayout>

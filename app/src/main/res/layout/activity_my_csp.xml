@@ -1,0 +1,51 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context=".MyCSP">
+
+    <ImageView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/background_main"
+        android:src="@drawable/background"
+        android:id="@+id/imageView"
+        android:layout_above="@+id/main_menu_list_view"
+        android:scaleType="centerCrop"
+        android:layout_alignParentTop="true" />
+
+    <ImageView
+        android:id="@+id/cspLogo"
+        android:layout_width="fill_parent"
+        android:layout_height="224dp"
+        android:layout_alignBaseline="@id/imageView"
+        android:scaleType="fitCenter"
+        android:src="@drawable/csp" />
+
+    <SearchView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/searchView"
+        android:layout_above="@+id/main_menu_list_view"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"/>
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="263dp"
+        android:id="@+id/main_menu_list_view"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:choiceMode="singleChoice"
+        android:background="#ff242936"
+        android:headerDividersEnabled="false"
+        android:divider="#ffffffff"
+        android:drawSelectorOnTop="true"
+        android:dividerHeight="1px" />
+
+</RelativeLayout>
