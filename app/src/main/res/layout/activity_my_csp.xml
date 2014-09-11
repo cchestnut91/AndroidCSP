@@ -6,24 +6,40 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
+    android:background="@drawable/launch"
     tools:context=".MyCSP">
 
-    <ImageView
+    <ImageSwitcher
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:adjustViewBounds="true"
-        android:contentDescription="@string/background_main"
-        android:src="@drawable/background"
-        android:id="@+id/imageView"
+        android:id="@+id/image_switcher"
         android:layout_above="@+id/main_menu_list_view"
-        android:scaleType="centerCrop"
-        android:layout_alignParentTop="true" />
+        android:layout_alignParentTop="true"
+        android:inAnimation="@anim/fadein"
+        android:outAnimation="@anim/fadeout">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/main_image_view_a"
+            android:contentDescription="@string/background_main"
+            android:src="@drawable/background"
+            android:scaleType="centerCrop"/>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/main_image_view_b"
+            android:contentDescription="@string/background_main"
+            android:src="@drawable/scroll_b"
+            android:scaleType="centerCrop"/>
+
+    </ImageSwitcher>
 
     <ImageView
         android:id="@+id/cspLogo"
         android:layout_width="fill_parent"
         android:layout_height="224dp"
-        android:layout_alignBaseline="@id/imageView"
+        android:layout_alignBaseline="@id/image_switcher"
         android:scaleType="fitCenter"
         android:src="@drawable/csp" />
 
