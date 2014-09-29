@@ -7,6 +7,7 @@ import android.location.Geocoder;
 import android.location.Location;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -16,7 +17,7 @@ import java.util.Map;
 /**
  * Created by cchestnut on 9/11/14.
  */
-public class Listing {
+public class Listing implements Serializable {
 
     Context ctx;
 
@@ -26,7 +27,7 @@ public class Listing {
     private String descrip;
     private String heat;
     private int beds;
-    private int baths;
+    private float baths;
     private float sqft;
     private float rent;
     private int unitID;
@@ -144,7 +145,7 @@ public class Listing {
         }
 
         if (infoIn.get("baths") != null){
-            this.baths = Integer.parseInt((String)infoIn.get("baths"));
+            this.baths = Float.parseFloat((String)infoIn.get("baths"));
         } else {
             this.baths = 0;
         }
@@ -305,7 +306,7 @@ if ([infoIn[@"buildiumID"] isKindOfClass:[NSNull class]]){
         return this.beds;
     }
 
-    public int getBaths(){
+    public float getBaths(){
         return this.baths;
     }
 
