@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="52dp"
+    android:orientation="horizontal"
+    android:padding="5dip"
+    android:background="#ffffffff">
+
+    <TextView
+        android:id="@+id/check_row_title"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text="Mainimum Rent"
+        android:textColor="#ff000000"
+        android:typeface="sans"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        android:layout_centerVertical="true"
+        android:padding="3dip"
+        android:layout_alignParentLeft="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_gravity="center_vertical"
+        android:textAlignment="center" />
+
+    <Switch
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/checkBox"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:gravity="center_vertical|center_horizontal" />
+
+
+</RelativeLayout>

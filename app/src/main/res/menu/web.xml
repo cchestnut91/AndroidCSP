@@ -1,0 +1,8 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="csp.experiencepush.com.mycsp.WebActivity" >
+    <item android:id="@+id/open_browser"
+        android:title="@string/open_browser"
+        android:orderInCategory="100"
+        android:showAsAction="never" />
+</menu>

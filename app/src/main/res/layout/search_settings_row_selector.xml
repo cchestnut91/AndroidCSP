@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="52dp"
+    android:orientation="horizontal"
+    android:padding="5dip"
+    android:background="#ffffffff">
+
+    <TextView
+        android:id="@+id/selector_row_text"
+        android:layout_width="50dp"
+        android:layout_height="match_parent"
+        android:text="Baths"
+        android:textColor="#ff000000"
+        android:typeface="sans"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        android:layout_centerVertical="true"
+        android:padding="3dip"
+        android:layout_alignParentLeft="true"
+        android:layout_marginRight="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_gravity="center_vertical"
+        android:textAlignment="center" />
+
+    <RadioGroup
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_toEndOf="@+id/selector_row_text"
+        android:layout_toRightOf="@+id/selector_row_text"
+        android:id="@+id/selector_group"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_gravity="center_vertical"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="5dp">
+
+        <view
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            class="csp.experiencepush.com.mycsp.SegmentedControlButton"
+            android:id="@+id/selector_segment_0"
+            android:text="0+"
+            android:clickable="true"
+            android:layout_gravity="left"
+            android:checked="false"
+            android:layout_weight="1" />
+        <view
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_toEndOf="@+id/selector_segment_0"
+            class="csp.experiencepush.com.mycsp.SegmentedControlButton"
+            android:id="@+id/selector_segment_1"
+            android:text="1+"
+            android:singleLine="false"
+            android:checked="false"
+            android:layout_weight="1" />
+        <view
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            class="csp.experiencepush.com.mycsp.SegmentedControlButton"
+            android:id="@+id/selector_segment_2"
+            android:text="2+"
+            android:layout_weight="1" />
+        <view
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            class="csp.experiencepush.com.mycsp.SegmentedControlButton"
+            android:id="@+id/selector_segment_3"
+            android:text="3+"
+            android:layout_weight="1" />
+        <view
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            class="csp.experiencepush.com.mycsp.SegmentedControlButton"
+            android:id="@+id/selector_segment_4"
+            android:text="4+"
+            android:layout_weight="1" />
+        <view
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            class="csp.experiencepush.com.mycsp.SegmentedControlButton"
+            android:id="@+id/selector_segment_5"
+            android:text="5+"
+            android:layout_weight="1" />
+    </RadioGroup>
+
+
+</RelativeLayout>

@@ -3,20 +3,81 @@
     package="csp.experiencepush.com.mycsp" >
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
+        android:name=".PushListener"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyBBJF7WtYkep05hF5z6s6TGeh6GNYV1ifU" />
+
         <activity
+            android:launchMode="singleInstance"
             android:name=".MyCSP"
-            android:windowSoftInputMode="adjustNothing"
+            android:label="@string/app_name"
             android:theme="@android:style/Theme.NoTitleBar"
-            android:label="@string/app_name" >
+            android:windowSoftInputMode="adjustNothing" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+            <intent-filter>
+                <data android:scheme="cspmgmt" />
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ListingFilterSettings"
+            android:label="@string/title_activity_listing_filter_settings"
+            android:parentActivityName=".MyCSP" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="csp.experiencepush.com.mycsp.MyCSP" />
+        </activity>
+        <activity
+            android:name=".DisplayListingResults"
+            android:label="@string/title_activity_display_listing_results" >
+        </activity>
+        <activity
+            android:name=".ListingDetailActivity"
+            android:label="@string/title_activity_listing_detail" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="csp.experiencepush.com.mycsp.DisplayListingResults" />
+        </activity>
+        <activity
+            android:name=".PreferenceActivity"
+            android:label="@string/title_activity_preference"
+            android:parentActivityName=".MyCSP" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="csp.experiencepush.com.mycsp.MyCSP" />
+        </activity>
+        <activity
+            android:name=".DefaultSettingsActivity"
+            android:label="@string/title_activity_default_settings" >
+        </activity>
+        <activity
+            android:name=".InfoActivity"
+            android:label="@string/title_activity_info" >
+        </activity>
+        <activity
+            android:name=".WebActivity"
+            android:label="@string/title_activity_web" >
         </activity>
     </application>
 
