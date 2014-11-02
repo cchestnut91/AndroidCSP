@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.drawable.GradientDrawable;
 import android.util.AttributeSet;
 import android.widget.RadioButton;
@@ -47,27 +46,21 @@ public class SegmentedControlButton extends RadioButton {
         float canvasWidth = canvas.getWidth();
         float textWidth = textPaint.measureText(text);
 
+        GradientDrawable grad = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, new int[] { Color.WHITE, Color.WHITE});
+        grad.setBounds(0, 0, this.getWidth(), this.getHeight());
+        grad.draw(canvas);
+
+        textPaint.setColor(0xff7c7c7c);
         if (isChecked()) {
-            textPaint.setColor(Color.WHITE);
-            GradientDrawable grad = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, new int[] { 0xff6f7dda, 0xff6f7dda });
-            grad.setBounds(0, 0, this.getWidth(), this.getHeight());
-            grad.draw(canvas);
-        } else {
-            textPaint.setColor(0xff6f7dda);
-            GradientDrawable grad = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, new int[] { Color.WHITE, Color.WHITE});
-            grad.setBounds(0, 0, this.getWidth(), this.getHeight());
-            grad.draw(canvas);
+            GradientDrawable indicator = new GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, new int[] { 0xff0099cc, 0xff0099cc});
+            indicator.setBounds(0, this.getHeight() - 20, this.getWidth(), this.getHeight());
+            indicator.draw(canvas);
         }
 
         float w = (this.getWidth() / 2) - currentWidth;
         float h = (this.getHeight() / 2) + currentHeight;
         canvas.drawText(text, mX, h, textPaint);
 
-        Paint paint = new Paint();
-        paint.setColor(0xff6f7dda);
-        paint.setStyle(Paint.Style.STROKE);
-        Rect rect = new Rect(0, 0, this.getWidth(), this.getHeight());
-        canvas.drawRect(rect, paint);
 
     }
 

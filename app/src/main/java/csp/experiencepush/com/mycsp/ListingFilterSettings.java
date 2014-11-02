@@ -28,22 +28,22 @@ public class ListingFilterSettings extends Activity {
         filter = new Filter(this);
 
         List<SearchSettingsListItem> itemList = new ArrayList<SearchSettingsListItem>();
-        itemList.add(new SearchSettingsListItem("Rooms", "header", 0));
+        itemList.add(new SearchSettingsListItem("ROOMS", "header", 0));
         itemList.add(new SearchSettingsListItem("Beds", "selector", filter.beds));
         itemList.add(new SearchSettingsListItem("Baths", "selector", filter.baths));
-        itemList.add(new SearchSettingsListItem("Rent", "header", 0));
+        itemList.add(new SearchSettingsListItem("RENT", "header", 0));
         itemList.add(new SearchSettingsListItem("Minimum Rent", "textInput", (int)filter.lowRent));
         itemList.add(new SearchSettingsListItem("Maximum Rent", "textInput", (int)filter.highRent));
         itemList.add(new SearchSettingsListItem("Only listings with rent in between these two values will be shown", "footer", 0));
-        itemList.add(new SearchSettingsListItem("Move In Date", "header", 0));
+        itemList.add(new SearchSettingsListItem("MOVE IN DATE", "header", 0));
         itemList.add(new SearchSettingsListItem("Month Available", "picker", 0));
         itemList.add(new SearchSettingsListItem("Some listings may not be shown until closer to their Move-In date. Check the app regularly to see new listings available in the future", "footer", 0));
-        itemList.add(new SearchSettingsListItem("Preferences", "header", 0));
+        itemList.add(new SearchSettingsListItem("PREFERENCES", "header", 0));
         itemList.add(new SearchSettingsListItem("Near Me", "switch", 0));
         itemList.add(new SearchSettingsListItem("Favorite", "switch", 1));
         itemList.add(new SearchSettingsListItem("Images", "switch", 2));
         itemList.add(new SearchSettingsListItem("Listings fitting these preferences will be shown", "footer", 0));
-        itemList.add(new SearchSettingsListItem("Amenities", "header", 0));
+        itemList.add(new SearchSettingsListItem("AMENITIES", "header", 0));
         itemList.add(new SearchSettingsListItem("Cable", "switch", 3));
         itemList.add(new SearchSettingsListItem("Hardwood Floors", "switch", 4));
         itemList.add(new SearchSettingsListItem("Refrigerator", "switch", 5));

@@ -320,6 +320,7 @@ public class ListingDetailActivity extends Activity {
         MenuItem favoriteButton = (MenuItem)menu.getItem(0);
         if (this.listing.isFavorite(this)){
             favoriteButton.setIcon(R.drawable.blue_star);
+            this.listing.favorite = true;
         } else {
             favoriteButton.setIcon(R.drawable.blue_star_empty);
         }

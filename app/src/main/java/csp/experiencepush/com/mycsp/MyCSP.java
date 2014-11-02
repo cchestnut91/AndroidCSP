@@ -88,12 +88,6 @@ public class MyCSP extends Activity implements
         UUID = "-1";
         if (UUID.equals("-1")){
             UUID = java.util.UUID.randomUUID().toString();
-// Send to REST API When Call is ready
-            /*
-            api.sendUser
-
-
-             */
             final String finalUUID = UUID;
             Thread thread = new Thread(new Runnable(){
                 @Override
@@ -457,7 +451,9 @@ public class MyCSP extends Activity implements
         }
 
         protected void onPostExecute(Boolean result){
-            ((PushListener)activity.getApplicationContext()).listenForBeaconsWithInterval(filteredBeacons, 30);
+            if (filteredBeacons != null){
+                ((PushListener)activity.getApplicationContext()).listenForBeaconsWithInterval(filteredBeacons, 30);
+            }
         }
     }
 

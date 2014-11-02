@@ -15,6 +15,7 @@ import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
 import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.BeaconParser;
+import org.altbeacon.beacon.Identifier;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
 import org.altbeacon.beacon.powersave.BackgroundPowerSaver;
@@ -24,8 +25,11 @@ import org.altbeacon.beacon.startup.RegionBootstrap;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -52,19 +56,24 @@ public class PushListener extends Application implements BootstrapNotifier, Rang
     public ArrayList<String[]> campaigns = new ArrayList<String[]>();
     public Map<String, ArrayList<String>> beaconsToListings;
     public Map<String, Region> beaconRegions = new HashMap<String, Region>();
-    public Map<String, Date> seenBeacons = new HashMap<String, Date>();
+    public Map<String, Date> seenBeacons;
     public ArrayList<String> campaignIDs;
+    Map<String, Region> startWhenReady = null;
 
 // Notifications Properties
     public ArrayList<Listing> listings = new ArrayList<Listing>();
     private int beaconInterval;
     ArrayList<Listing> filteredListings;
 
+    Region mAllBeaconsRegion = new Region("all beacons", Identifier.parse("AAAAAAAA-BBBB-BBBB-CCCC-CCCCDDDDDDDD"), null, null);
+
     @Override
     public void onCreate() {
         super.onCreate();
 
         Log.d(TAG, "App started up");
+
+        seenBeacons = readBeaconsSeen();
 
         beaconManager = org.altbeacon.beacon.BeaconManager.getInstanceForApplication(this);
         beaconManager.getBeaconParsers().add(new BeaconParser().setBeaconLayout("m:2-3=0215,i:4-19,i:20-21,i:22-23,p:24-24"));
@@ -84,6 +93,14 @@ public class PushListener extends Application implements BootstrapNotifier, Rang
     public void onBeaconServiceConnect() {
         beaconManager.setRangeNotifier(this);
         managerReady = true;
+        if (startWhenReady != null){
+            listenForBeacons(startWhenReady);
+        }
+        try {
+            beaconManager.startMonitoringBeaconsInRegion(mAllBeaconsRegion);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -97,13 +114,16 @@ public class PushListener extends Application implements BootstrapNotifier, Rang
     }
 
     public void listenForBeacons(Map<String, Region> beacons) {
-        ArrayList<Region> toRange = new ArrayList<Region>();
-        for (Region beaconRegion : beacons.values()) {
-            toRange.add(beaconRegion);
-            beaconRegions.put(beaconRegion.getId1().toString(), beaconRegion);
+        if (managerReady) {
+            ArrayList<Region> toRange = new ArrayList<Region>();
+            for (Region beaconRegion : beacons.values()) {
+                toRange.add(beaconRegion);
+                beaconRegions.put(beaconRegion.getId1().toString(), beaconRegion);
+            }
+            //regionBootstrap = new RegionBootstrap(this, toRange);
+        } else {
+            startWhenReady = beacons;
         }
-
-        regionBootstrap = new RegionBootstrap(this, toRange);
     }
 
     public void listenForBeaconsWithInterval(Map<String, Region> beacons, int seconds){
@@ -229,6 +249,48 @@ public class PushListener extends Application implements BootstrapNotifier, Rang
         manager.notify(0, notification);
     }
 
+    private void writeBeaconsSeen(String key){
+        File listingDir = this.getDir("SeenBeacons", MODE_PRIVATE);
+        ObjectOutput out = null;
+        try {
+            File toWrite = new File(listingDir, key);
+            out = new ObjectOutputStream(new FileOutputStream(toWrite));
+            out.writeObject(seenBeacons.get(key));
+            out.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Map<String, Date> readBeaconsSeen(){
+        int priv = this.MODE_PRIVATE;
+        File listingDir = getDir("SeenBeacons", 0);
+        Map<String, Date> seen = new HashMap<String, Date>();
+        String[] keys = listingDir.list();
+        for (String key: keys){
+            FileInputStream fis = null;
+            try {
+                File readFile = new File(listingDir, key);
+                fis = new FileInputStream(readFile);
+                ObjectInputStream is = new ObjectInputStream(fis);
+                Date toAdd = (Date) is.readObject();
+                seen.put(key, toAdd);
+                is.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (StreamCorruptedException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        return seen;
+    }
+
     private void getListings(String[] listingDirFiles){
         File listingDir = this.getDir("Listings", MODE_PRIVATE);
         listings = new ArrayList<Listing>();
@@ -262,6 +324,7 @@ public class PushListener extends Application implements BootstrapNotifier, Rang
 
     public void addBeaconToSeen(Region beacon){
         seenBeacons.put(beacon.getUniqueId(), new Date());
+        writeBeaconsSeen(beacon.getUniqueId());
 // Save to local
     }
 
