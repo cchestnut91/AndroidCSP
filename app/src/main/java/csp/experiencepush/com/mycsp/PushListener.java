@@ -16,6 +16,7 @@ import org.altbeacon.beacon.BeaconConsumer;
 import org.altbeacon.beacon.BeaconManager;
 import org.altbeacon.beacon.BeaconParser;
 import org.altbeacon.beacon.Identifier;
+import org.altbeacon.beacon.MonitorNotifier;
 import org.altbeacon.beacon.RangeNotifier;
 import org.altbeacon.beacon.Region;
 import org.altbeacon.beacon.powersave.BackgroundPowerSaver;
@@ -40,7 +41,7 @@ import java.util.Map;
 /**
  * Created by cchestnut on 10/20/14.
  */
-public class PushListener extends Application implements BootstrapNotifier, RangeNotifier, BeaconConsumer {
+public class PushListener extends Application implements BootstrapNotifier, RangeNotifier, BeaconConsumer, MonitorNotifier {
 // Class Properties
     public static final String TAG = ".MyCSP";
     Context appContext = this;
@@ -94,13 +95,40 @@ public class PushListener extends Application implements BootstrapNotifier, Rang
         beaconManager.setRangeNotifier(this);
         managerReady = true;
         if (startWhenReady != null){
-            listenForBeacons(startWhenReady);
+            //listenForBeacons(startWhenReady);
         }
+        /*
         try {
             beaconManager.startMonitoringBeaconsInRegion(mAllBeaconsRegion);
         } catch (RemoteException e) {
             e.printStackTrace();
         }
+        */
+
+        /*
+        beaconManager.setMonitorNotifier(new MonitorNotifier() {
+            @Override
+            public void didEnterRegion(Region region) {
+                Log.d(TAG, "Got a didEnterRegion call");
+                try {
+                    beaconManager.startRangingBeaconsInRegion(region);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void didExitRegion(Region region) {
+                Log.i(TAG, "I no longer see an beacon");
+            }
+
+            @Override
+            public void didDetermineStateForRegion(int state, Region region) {
+                Log.i(TAG, "I have just switched from seeing/not seeing beacons: "+state);
+            }
+        });
+        */
+        beaconManager.setMonitorNotifier(this);
     }
 
     @Override
@@ -119,6 +147,9 @@ public class PushListener extends Application implements BootstrapNotifier, Rang
             for (Region beaconRegion : beacons.values()) {
                 toRange.add(beaconRegion);
                 beaconRegions.put(beaconRegion.getId1().toString(), beaconRegion);
+                try {
+                    beaconManager.startMonitoringBeaconsInRegion(beaconRegion);
+                } catch (RemoteException e) {   }
             }
             //regionBootstrap = new RegionBootstrap(this, toRange);
         } else {
