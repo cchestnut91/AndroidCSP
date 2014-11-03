@@ -43,6 +43,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
+import java.io.OptionalDataException;
 import java.io.StreamCorruptedException;
 import java.net.URL;
 import java.text.ParseException;
@@ -389,9 +390,22 @@ public class MyCSP extends Activity implements
         protected Boolean doInBackground(ArrayList<Listing>... listingsIn) {
 
             Map<String, Region> beaconDictionary = new HashMap<String, Region>();
+            String beaconFile= "beacons.json";
             try {
                 beaconData = new PushRESTAPI().getAllBeacons();
                 if (beaconData != null){
+                    ObjectOutput out = null;
+                    try {
+                        File toFile;
+                        toFile = new File(activity.getDir("Beacons", MODE_PRIVATE),beaconFile);
+                        out = new ObjectOutputStream(new FileOutputStream(toFile));
+                        out.writeObject(beaconData.toString());
+                        out.close();
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     for (int i = 0; i < beaconData.length(); i++){
                         JSONArray beaconArray = null;
                         try {
@@ -415,7 +429,20 @@ public class MyCSP extends Activity implements
                 if (beaconDictionary.size() > 0){
                     JSONArray campaignData = new PushRESTAPI().getCampaignHasBeacon();
                     ArrayList<String[]> campaigns = new ArrayList<String[]>();
+                    String campaignFile = "campaigns.json";
                     if (campaignData != null){
+                        ObjectOutput out = null;
+                        try {
+                            File toFile;
+                            toFile = new File(activity.getDir("Beacons", MODE_PRIVATE),campaignFile);
+                            out = new ObjectOutputStream(new FileOutputStream(toFile));
+                            out.writeObject(campaignData.toString());
+                            out.close();
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                         for (int i = 0; i < campaignData.length(); i++){
                             JSONArray campaign = (JSONArray)campaignData.get(i);
                             // Campaign Format {campaignID, unitID, beaconID}
@@ -424,6 +451,29 @@ public class MyCSP extends Activity implements
                         }
                     } else {
 // Handle Campaign Failure
+                        FileInputStream fis = null;
+                        try {
+                            File readFile = new File(activity.getDir("Beacons", MODE_PRIVATE),campaignFile);
+                            fis = new FileInputStream(readFile);
+                            ObjectInputStream is = new ObjectInputStream(fis);
+                            campaignData = new JSONArray((String) is.readObject());
+                            is.close();
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        } catch (StreamCorruptedException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (ClassNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                        for (int i = 0; i < campaignData.length(); i++){
+                            JSONArray campaign = (JSONArray)campaignData.get(i);
+                            // Campaign Format {campaignID, unitID, beaconID}
+                            String[] newCampaign = {String.valueOf((Integer)campaign.get(0)), (String)campaign.get(1), (String)campaign.get(2)};
+                            campaigns.add(newCampaign);
+                        }
+
                     }
                     if (campaigns.size() > 0){
                         filteredBeacons = new HashMap<String, Region>();
@@ -447,6 +497,8 @@ public class MyCSP extends Activity implements
                 }
             } catch (Exception e) {
                 e.printStackTrace();
+
+                loadCachedBeacons();
             }
 
             return true;
@@ -455,6 +507,111 @@ public class MyCSP extends Activity implements
         protected void onPostExecute(Boolean result){
             if (filteredBeacons != null){
                 ((PushListener)activity.getApplicationContext()).listenForBeaconsWithInterval(filteredBeacons, 30);
+            }
+        }
+
+        public void loadCachedBeacons(){
+
+            FileInputStream fis = null;
+            Map<String, Region> beaconDictionary = new HashMap<String, Region>();
+            String beaconFile= "beacons.json";
+            JSONArray beaconData = null;
+            try {
+                File readFile = new File(this.activity.getDir("Beacons", MODE_PRIVATE),beaconFile);
+                fis = new FileInputStream(readFile);
+                ObjectInputStream is = new ObjectInputStream(fis);
+                beaconData = new JSONArray((String) is.readObject());
+                is.close();
+            } catch (ClassNotFoundException e1) {
+                e1.printStackTrace();
+            } catch (OptionalDataException e1) {
+                e1.printStackTrace();
+            } catch (FileNotFoundException e1) {
+                e1.printStackTrace();
+            } catch (StreamCorruptedException e1) {
+                e1.printStackTrace();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            if (beaconData != null){
+                for (int i = 0; i < beaconData.length(); i++){
+                    JSONArray beaconArray = null;
+                    try {
+                        beaconArray = (JSONArray)beaconData.get(i);
+                        Region toAdd;
+                        String unique = null;
+                        String uuid = null;
+                        unique = (String)beaconArray.get(0);
+                        uuid = (String)beaconArray.get(2);
+                        int major = (Integer)beaconArray.get(3);
+                        int minor = (Integer)beaconArray.get(4);
+                        toAdd = new Region(unique, Identifier.parse(uuid), Identifier.fromInt(major), Identifier.fromInt(minor));
+                        beaconDictionary.put(unique, toAdd);
+                    } catch (JSONException e1) {
+                        e1.printStackTrace();
+                    }
+
+                }
+                System.out.println("Not Null");
+            }
+            if (beaconDictionary.size() > 0){
+                String campaignFile = "campaigns.json";
+                ArrayList<String[]> campaigns = new ArrayList<String[]>();
+                JSONArray campaignData = null;
+                FileInputStream fis1 = null;
+                try {
+                    File readFile = new File(this.activity.getDir("Beacons", MODE_PRIVATE),campaignFile);
+                    fis1 = new FileInputStream(readFile);
+                    ObjectInputStream is = new ObjectInputStream(fis1);
+                    campaignData = new JSONArray((String) is.readObject());
+                    is.close();
+                } catch (ClassNotFoundException e1) {
+                    e1.printStackTrace();
+                } catch (OptionalDataException e1) {
+                    e1.printStackTrace();
+                } catch (FileNotFoundException e1) {
+                    e1.printStackTrace();
+                } catch (StreamCorruptedException e1) {
+                    e1.printStackTrace();
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                } catch (JSONException e1) {
+                    e1.printStackTrace();
+                }
+                if (campaignData != null){
+                    for (int i = 0; i < campaignData.length(); i++){
+                        JSONArray campaign = null;
+                        try {
+                            campaign = (JSONArray)campaignData.get(i);
+                            // Campaign Format {campaignID, unitID, beaconID}
+                            String[] newCampaign = {String.valueOf((Integer)campaign.get(0)), (String)campaign.get(1), (String)campaign.get(2)};
+                            campaigns.add(newCampaign);
+                        } catch (JSONException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+                    if (campaigns.size() > 0){
+                        filteredBeacons = new HashMap<String, Region>();
+                        Map<String, ArrayList<String>> beaconsToListings = new HashMap<String, ArrayList<String>>();
+
+                        for(String[] campaign: campaigns){
+                            filteredBeacons.put(campaign[2], beaconDictionary.get(campaign[2]));
+                            ArrayList<String> newList;
+                            if (beaconsToListings.containsKey(campaign[2])){
+                                newList = beaconsToListings.get(campaign[2]);
+                            } else {
+                                newList = new ArrayList<String>();
+                            }
+                            newList.add(campaign[1]);
+                            beaconsToListings.put(campaign[2], newList);
+                        }
+// Send Maps and do beacon stuff
+                        ((PushListener)activity.getApplicationContext()).beaconsToListings = beaconsToListings;
+                        ((PushListener)activity.getApplicationContext()).campaigns = campaigns;
+                    }
+                }
             }
         }
     }

@@ -95,7 +95,7 @@ public class PushListener extends Application implements BootstrapNotifier, Rang
         beaconManager.setRangeNotifier(this);
         managerReady = true;
         if (startWhenReady != null){
-            //listenForBeacons(startWhenReady);
+            listenForBeacons(startWhenReady);
         }
         beaconManager.setMonitorNotifier(this);
     }
@@ -242,9 +242,12 @@ public class PushListener extends Application implements BootstrapNotifier, Rang
         Notification notification = new Notification.Builder(this)
                 .setContentTitle("Nearby Listings")
                 .setContentText(alertBody)
-                .setSmallIcon(R.drawable.ic_launcher).setContentIntent(pendingIntent)
+                .setTicker("Nearby Listings")
+                .setSmallIcon(R.drawable.ic_launcher)
+                .setContentIntent(pendingIntent)
                 .build();
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
+        notification.largeIcon = null;
         manager.notify(0, notification);
     }
 
