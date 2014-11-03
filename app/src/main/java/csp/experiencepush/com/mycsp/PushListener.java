@@ -97,37 +97,6 @@ public class PushListener extends Application implements BootstrapNotifier, Rang
         if (startWhenReady != null){
             //listenForBeacons(startWhenReady);
         }
-        /*
-        try {
-            beaconManager.startMonitoringBeaconsInRegion(mAllBeaconsRegion);
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-        */
-
-        /*
-        beaconManager.setMonitorNotifier(new MonitorNotifier() {
-            @Override
-            public void didEnterRegion(Region region) {
-                Log.d(TAG, "Got a didEnterRegion call");
-                try {
-                    beaconManager.startRangingBeaconsInRegion(region);
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void didExitRegion(Region region) {
-                Log.i(TAG, "I no longer see an beacon");
-            }
-
-            @Override
-            public void didDetermineStateForRegion(int state, Region region) {
-                Log.i(TAG, "I have just switched from seeing/not seeing beacons: "+state);
-            }
-        });
-        */
         beaconManager.setMonitorNotifier(this);
     }
 
@@ -170,7 +139,6 @@ public class PushListener extends Application implements BootstrapNotifier, Rang
                 e.printStackTrace();
             }
         }
-        regionBootstrap = null;
     }
 
     public void stopListeningForBeaconsWithUUID(String uuid){
@@ -347,10 +315,16 @@ public class PushListener extends Application implements BootstrapNotifier, Rang
     }
 
     public boolean shouldSendNotificationForRegion(String uuid){
+        boolean ret;
         if (seenBeacons.containsKey(uuid)){
-            return Math.abs(seenBeacons.get(uuid).compareTo(new Date())) >= beaconInterval;
+            Date last = seenBeacons.get(uuid);
+            Date now = new Date();
+            long since = now.getTime() - last.getTime();
+            ret = since >= beaconInterval * 1000;
+        } else {
+            ret = true;
         }
-        return true;
+        return ret;
     }
 
     public void addBeaconToSeen(Region beacon){

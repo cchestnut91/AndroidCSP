@@ -553,7 +553,7 @@ if ([infoIn[@"buildiumID"] isKindOfClass:[NSNull class]]){
     public boolean isFavorite(Context context){
 
         SharedPreferences settings = context.getSharedPreferences("CSPPrefsFile", 0);
-        List<String> favs = new ArrayList<String>(settings.getStringSet("Favorites", null));
+        List<String> favs = new ArrayList<String>(settings.getStringSet("Favorites",null));
         if (favs == null){
             return false;
         }

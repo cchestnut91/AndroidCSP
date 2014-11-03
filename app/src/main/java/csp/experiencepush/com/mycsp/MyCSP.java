@@ -54,6 +54,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -85,8 +86,9 @@ public class MyCSP extends Activity implements
         final SharedPreferences.Editor editor = settings.edit();
 
         String UUID= settings.getString("userUUID", "-1");
-        UUID = "-1";
         if (UUID.equals("-1")){
+            Set<String> stringSet = new HashSet<String>();
+            editor.putStringSet("Favorites", stringSet);
             UUID = java.util.UUID.randomUUID().toString();
             final String finalUUID = UUID;
             Thread thread = new Thread(new Runnable(){
