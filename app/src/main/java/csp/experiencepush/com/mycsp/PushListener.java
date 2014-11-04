@@ -243,11 +243,10 @@ public class PushListener extends Application implements BootstrapNotifier, Rang
                 .setContentTitle("Nearby Listings")
                 .setContentText(alertBody)
                 .setTicker("Nearby Listings")
-                .setSmallIcon(R.drawable.ic_launcher)
+                .setSmallIcon(R.drawable.ic_launcher_small)
                 .setContentIntent(pendingIntent)
                 .build();
         notification.flags |= Notification.FLAG_AUTO_CANCEL;
-        notification.largeIcon = null;
         manager.notify(0, notification);
     }
 
