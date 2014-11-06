@@ -1,6 +1,7 @@
 package csp.experiencepush.com.mycsp;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +10,8 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -77,6 +80,7 @@ public class MyCSP extends Activity implements
     public SharedPreferences settings;
     Context context = this;
     public ArrayList<String[]> campaigns;
+    long difference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -242,6 +246,26 @@ public class MyCSP extends Activity implements
         }
     }
 
+    public boolean isNetworkOnline() {
+        boolean status=false;
+        try{
+            ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo netInfo = cm.getNetworkInfo(0);
+            if (netInfo != null && netInfo.getState()==NetworkInfo.State.CONNECTED) {
+                status= true;
+            }else {
+                netInfo = cm.getNetworkInfo(1);
+                if(netInfo!=null && netInfo.getState()==NetworkInfo.State.CONNECTED)
+                    status= true;
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return status;
+
+    }
+
     @Override
     protected void onStart(){
         super.onStart();
@@ -260,13 +284,13 @@ public class MyCSP extends Activity implements
                 File first = new File(listingDir, listingDirFiles[0]);
                 Date modifified = new Date(first.lastModified());
                 Date now = new Date();
-                long difference = now.getTime() - modifified.getTime();
+                difference = now.getTime() - modifified.getTime();
                 if (difference >= 86400000){
                     write = true;
                 }
             }
             //write = true;
-            if (write){
+            if (write && isNetworkOnline()){
                 task.execute("http://experiencepush.com/csp_portal/rest/?PUSH_ID=123&call=getAllListings");
             } else {
                 listings = new ArrayList<Listing>();
@@ -297,6 +321,9 @@ public class MyCSP extends Activity implements
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }
+            if (difference >= 259200000){
+                AlertDialog update = new AlertDialog.Builder(this).setTitle("Listings have not been updated lately").setMessage("Load MyCSP while connected to a valid network to get latest listings").setNeutralButton("OK", null).show();
             }
         }
 

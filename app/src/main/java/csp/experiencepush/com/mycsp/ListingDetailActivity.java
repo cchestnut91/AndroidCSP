@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,8 +41,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
-
-import uk.co.senab.photoview.PhotoViewAttacher;
 
 
 public class ListingDetailActivity extends Activity {
@@ -192,7 +192,7 @@ public class ListingDetailActivity extends Activity {
         });
 
         final SliderLayout sliderShow = (SliderLayout) findViewById(R.id.sliderView);
-        if (listing.getImageSrc().length > 1){
+        if (listing.getImageSrc().length > 1 && isNetworkOnline()){
             sliderShow.stopAutoCycle();
             sliderShow.setIndicatorVisibility(PagerIndicator.IndicatorVisibility.Visible);
             sliderShow.setCustomIndicator((PagerIndicator) findViewById(R.id.custom_indicator));
@@ -212,13 +212,14 @@ public class ListingDetailActivity extends Activity {
                 });
 */
                 sliderShow.addSlider(sliderView);
-                PhotoViewAttacher mAttacher = new PhotoViewAttacher((ImageView)sliderView.getView().findViewById(R.id.daimajia_slider_image));
+                //PhotoViewAttacher mAttacher = new PhotoViewAttacher((ImageView)sliderView.getView().findViewById(R.id.daimajia_slider_image));
             }
         } else {
             sliderShow.setVisibility(View.INVISIBLE);
 
             final ImageView mainView =((ImageView)findViewById(R.id.imageView));
             mainView.setVisibility(View.VISIBLE);
+            /*
             mainView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -240,7 +241,8 @@ public class ListingDetailActivity extends Activity {
                     });
                 }
             });
-            if (listing.getImageSrc().length == 1) {
+            */
+            if (listing.getImageSrc().length >= 1) {
 
                 String buildiumID = String.valueOf(listing.getBuildiumID());
 
@@ -256,6 +258,26 @@ public class ListingDetailActivity extends Activity {
             }
             //PhotoViewAttacher mAttacher = new PhotoViewAttacher((ImageView)findViewById(R.id.imageView));
         }
+    }
+
+    public boolean isNetworkOnline() {
+        boolean status=false;
+        try{
+            ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo netInfo = cm.getNetworkInfo(0);
+            if (netInfo != null && netInfo.getState()==NetworkInfo.State.CONNECTED) {
+                status= true;
+            }else {
+                netInfo = cm.getNetworkInfo(1);
+                if(netInfo!=null && netInfo.getState()==NetworkInfo.State.CONNECTED)
+                    status= true;
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return status;
+
     }
 
 

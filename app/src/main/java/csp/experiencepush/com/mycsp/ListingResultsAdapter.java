@@ -97,6 +97,10 @@ public class ListingResultsAdapter extends ArrayAdapter<Listing>{
 
     public View getView(int position, View convertView, ViewGroup parent) {
 
+        if (position == 1){
+            String pause = "";
+        }
+
         convertView = (RelativeLayout)inflater.inflate(resource, null);
         Listing Item = getItem(position);
         aq = new AQuery(convertView);
@@ -117,7 +121,7 @@ public class ListingResultsAdapter extends ArrayAdapter<Listing>{
         File listingDir = context.getDir("listingImages", context.MODE_PRIVATE);
         if ((new File(listingDir, buildiumID)).exists()) {
             File firstImage = new File(listingDir, buildiumID);
-            aq.id(R.id.imageView).image(firstImage, 200);
+            aq.id(R.id.imageView).image(firstImage.getPath(), true, true, 200, R.drawable.background);
         } else {
             aq.id(R.id.imageView).image(R.drawable.background);
         }
