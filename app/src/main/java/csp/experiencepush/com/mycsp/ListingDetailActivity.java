@@ -65,6 +65,27 @@ public class ListingDetailActivity extends Activity {
         wasFavorite = listing.isFavorite(this);
         imgPos = 0;
 
+        final String actionID = this.getIntent().getStringExtra("actionID");
+        if (actionID != null){
+
+            SharedPreferences settings = getSharedPreferences("CSPPrefsFile", 0);
+            final SharedPreferences.Editor editor = settings.edit();
+
+            final String UUID= settings.getString("userUUID", "-1");
+            final PushRESTAPI api = new PushRESTAPI();
+            Thread thread = new Thread(new Runnable(){
+                @Override
+                public void run(){
+                    try {
+                        api.updateTriggeredBeaconAction(actionID, "1");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            thread.start();
+        }
+
 // Images for preview
 
         TextView addressText = (TextView)findViewById(R.id.address_text);

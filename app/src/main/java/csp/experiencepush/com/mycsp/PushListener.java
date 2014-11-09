@@ -62,6 +62,7 @@ public class PushListener extends Application implements BootstrapNotifier, Rang
     Map<String, Region> startWhenReady = null;
 
 // Notifications Properties
+    private String actionID = null;
     public ArrayList<Listing> listings = new ArrayList<Listing>();
     private int beaconInterval;
     ArrayList<Listing> filteredListings;
@@ -128,6 +129,7 @@ public class PushListener extends Application implements BootstrapNotifier, Rang
 
     public void listenForBeaconsWithInterval(Map<String, Region> beacons, int seconds){
         beaconInterval = seconds;
+        beaconInterval = 30;
         listenForBeacons(beacons);
     }
 
@@ -157,10 +159,12 @@ public class PushListener extends Application implements BootstrapNotifier, Rang
         if (prefs.getBoolean("allowBeacons", true)){
             if (shouldSendNotificationForRegion(region.getUniqueId())){
                 addBeaconToSeen(region);
+                final String campaignID = region.getUniqueId();
 
-                ArrayList<String> listingsForBeacon = beaconsToListings.get(region.getUniqueId());
+                ArrayList<String> listingsForBeacon = beaconsToListings.get(campaignID);
 
                 if (listingsForBeacon != null){
+
                     int[] unitIDs = new int[listingsForBeacon.size()];
                     int cnt = 0;
                     for (String unitID: listingsForBeacon){
@@ -191,6 +195,32 @@ public class PushListener extends Application implements BootstrapNotifier, Rang
                                     campaignIDs.add(campaign[0]);
                                 }
                             }
+
+                            SharedPreferences settings = getSharedPreferences("CSPPrefsFile", 0);
+                            final SharedPreferences.Editor editor = settings.edit();
+
+                            final String UUID= settings.getString("userUUID", "-1");
+                            final PushRESTAPI api = new PushRESTAPI();
+
+                            try {
+                                actionID = api.registerTriggeredBeaconAction(campaignIDs.get(0), "0", UUID);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            /*
+                            Thread thread = new Thread(new Runnable(){
+                                @Override
+                                public void run(){
+                                    try {
+                                        api.registerTriggeredBeaconAction(campaignIDs.get(0), "0", UUID);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+                            thread.start();
+                            */
                             displayNearbyNotification(holdURL);
                         }
                     }
@@ -233,6 +263,9 @@ public class PushListener extends Application implements BootstrapNotifier, Rang
         } else {
             intent = new Intent(this, DisplayListingResults.class);
             intent.putParcelableArrayListExtra("Listings", filteredListings);
+        }
+        if (actionID != null){
+            intent.putExtra("actionID", actionID);
         }
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                 | Intent.FLAG_ACTIVITY_SINGLE_TOP);

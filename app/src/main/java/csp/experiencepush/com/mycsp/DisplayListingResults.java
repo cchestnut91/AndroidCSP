@@ -3,6 +3,7 @@ package csp.experiencepush.com.mycsp;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.view.Menu;
@@ -26,6 +27,26 @@ public class DisplayListingResults extends Activity {
 
         if (allListings == null){
             this.allListings= getIntent().getParcelableArrayListExtra("Listings");
+        }
+        final String actionID = this.getIntent().getStringExtra("actionID");
+        if (actionID != null){
+
+            SharedPreferences settings = getSharedPreferences("CSPPrefsFile", 0);
+            final SharedPreferences.Editor editor = settings.edit();
+
+            final String UUID= settings.getString("userUUID", "-1");
+            final PushRESTAPI api = new PushRESTAPI();
+            Thread thread = new Thread(new Runnable(){
+                @Override
+                public void run(){
+                    try {
+                        api.updateTriggeredBeaconAction(actionID, "1");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+            thread.start();
         }
 
         ListView itemListView = (ListView)findViewById(R.id.results_list_view);
