@@ -47,6 +47,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/searchView"
+        android:queryHint="Enter a query?"
         android:layout_above="@+id/main_menu_list_view"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"/>

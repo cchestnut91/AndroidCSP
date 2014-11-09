@@ -94,26 +94,24 @@ public class PushRESTAPI {
 
     public String registerTriggeredBeaconAction(String campaignId, String clicked, String uuid)throws Exception {
         String postData = null;
-        String postContent = "PUSH_ID=123&campaign_id="+campaignId+"&clicked="+clicked+"&uuid="+uuid+"&call=registerTriggeredBeaconAction";
-        String url = "http://experiencepush.com/csp_portal/rest/index.php";
         try{
-            postData = data.sendPost(url,postContent);
-            }catch(IOException ioe){
-                System.out.println("I/O error occurred: "+ioe);
-            }
-        return postData;
-    }
-
-    public String updateTriggeredBeaconAction(String action_id, String clicked) throws Exception{
-        String postData = null;
-        try{
-            postData = data.sendPost("http://experiencepush.com/csp_portal/rest/index.php","PUSH_ID=123&action_id="+action_id+"&clicked="+clicked+"&call=registerTriggeredBeaconAction");
+            postData = data.sendPost("http://experiencepush.com/csp_portal/rest/index.php","PUSH_ID=123&campaign_id="+campaignId+"&clicked="+clicked+"&uuid="+uuid+"&call=registerTriggeredBeaconAction");
         }catch(IOException ioe){
             System.out.println("I/O error occurred: "+ioe);
         }
         return postData;
     }
 
+    public String updateTriggeredBeaconAction(String action_id, String clicked) throws Exception{
+        String postData = null;
+        try{
+            postData = data.sendPost("http://experiencepush.com/csp_portal/rest/index.php","PUSH_ID=123&action_id="+action_id+"&clicked="+clicked+"&call=updateTriggeredBeaconAction");
+        }catch(IOException ioe){
+            System.out.println("I/O error occurred: "+ioe);
+        }
+        return postData;
+    }
+    /*
     public static void main(String[] args) throws Exception{
         PushRESTAPI api = new PushRESTAPI();
         //System.out.println(api.getAllListings());
@@ -123,4 +121,5 @@ public class PushRESTAPI {
         //System.out.println(api.addNewAnonUser("6E96D72B-850C-419A-B1AD-4FE08F40210E"));
         System.out.println(api.getCampaignHasBeacon());
     }
+    */
 }

@@ -24,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.androidquery.AQuery;
@@ -146,6 +147,31 @@ public class MyCSP extends Activity implements
         itemList.add(new MainMenuListItem("My Favorites", "star"));
         itemList.add(new MainMenuListItem("Preferences", "profile"));
         itemList.add(new MainMenuListItem("Tenant Info", "lightbulb"));
+
+        final SearchView sv = (SearchView)findViewById(R.id.searchView);
+        sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                if(listings == null){
+                    Toast.makeText(MyCSP.this, "Loading Listings. Please Wait", Toast.LENGTH_SHORT).show();
+                }else{
+                    Filter filter = new Filter();
+                    String[] query = sv.getQuery().toString().split(" ");
+                    filter.setKeyWords(query);
+                    ArrayList<Listing> filteredListings = filter.filterListings(listings.toArray(new Listing[listings.size()]), false, context);
+                    Intent results = new Intent(ctx, DisplayListingResults.class);
+                    results.putParcelableArrayListExtra("Listings", filteredListings);
+                    startActivity(results);
+                }
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                return false;
+            }
+        });
+
 
         ListView itemListView = (ListView)findViewById(R.id.main_menu_list_view);
         itemListView.setAdapter(new MainMenuAdapter(ctx, R.layout.main_screen_list_item, itemList));
@@ -366,6 +392,8 @@ public class MyCSP extends Activity implements
             }
         }
     }
+
+
 
     @Override
     protected void onStop(){
