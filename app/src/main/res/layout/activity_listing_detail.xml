@@ -92,7 +92,9 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:id="@+id/detail_view"
-            android:layout_alignParentStart="true" >
+            android:layout_alignParentStart="true"
+            android:gravity="fill_vertical"
+            android:background="#ffffffff">
 
             <TextView
                 android:layout_width="wrap_content"
