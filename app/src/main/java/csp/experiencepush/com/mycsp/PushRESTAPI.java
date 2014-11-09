@@ -95,7 +95,7 @@ public class PushRESTAPI {
     public String registerTriggeredBeaconAction(String campaignId, String clicked, String uuid)throws Exception {
         String postData = null;
         try{
-            postData = data.sendPost("http://experiencepush.com/csp_portal/rest/index.php","PUSH_ID=123&campaign_id="+campaignId+"&clicked="+clicked+"&uuid="+uuid);
+            postData = data.sendPost("http://experiencepush.com/csp_portal/rest/index.php","PUSH_ID=123&campaign_id="+campaignId+"&clicked="+clicked+"&uuid="+uuid+"&call=registerTriggeredBeaconAction");
         }catch(IOException ioe){
             System.out.println("I/O error occurred: "+ioe);
         }
@@ -105,7 +105,7 @@ public class PushRESTAPI {
     public String updateTriggeredBeaconAction(String action_id, String clicked) throws Exception{
         String postData = null;
         try{
-            postData = data.sendPost("http://experiencepush.com/csp_portal/rest/index.php","PUSH_ID=123&action_id="+action_id+"&clicked="+clicked);
+            postData = data.sendPost("http://experiencepush.com/csp_portal/rest/index.php","PUSH_ID=123&action_id="+action_id+"&clicked="+clicked+"&call=updateTriggeredBeaconAction");
         }catch(IOException ioe){
             System.out.println("I/O error occurred: "+ioe);
         }
