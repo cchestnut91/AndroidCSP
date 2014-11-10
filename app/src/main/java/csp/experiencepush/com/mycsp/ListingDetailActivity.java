@@ -10,7 +10,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -186,7 +185,6 @@ public class ListingDetailActivity extends Activity {
                                     callIntent.setData(Uri.parse("tel:6072776961"));
                                     startActivity(callIntent);
                                 } catch (ActivityNotFoundException e) {
-                                    Log.e("helloandroid dialing example", "Call failed", e);
                                 }
                                 return true;
                             case R.id.contact_email:

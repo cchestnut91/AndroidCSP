@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Parcelable;
 import android.os.RemoteException;
-import android.util.Log;
 
 import org.altbeacon.beacon.Beacon;
 import org.altbeacon.beacon.BeaconConsumer;
@@ -72,9 +71,6 @@ public class PushListener extends Application implements BootstrapNotifier, Rang
     @Override
     public void onCreate() {
         super.onCreate();
-
-        Log.d(TAG, "App started up");
-
         seenBeacons = readBeaconsSeen();
 
         beaconManager = org.altbeacon.beacon.BeaconManager.getInstanceForApplication(this);
@@ -103,7 +99,6 @@ public class PushListener extends Application implements BootstrapNotifier, Rang
 
     @Override
     public void didEnterRegion(Region region) {
-        Log.d(TAG, "Got a didEnterRegion call");
         try {
             beaconManager.startRangingBeaconsInRegion(region);
         } catch (RemoteException e) {
@@ -129,7 +124,6 @@ public class PushListener extends Application implements BootstrapNotifier, Rang
 
     public void listenForBeaconsWithInterval(Map<String, Region> beacons, int seconds){
         beaconInterval = seconds;
-        beaconInterval = 30;
         listenForBeacons(beacons);
     }
 
@@ -246,7 +240,6 @@ public class PushListener extends Application implements BootstrapNotifier, Rang
     }
 
     public void displayNearbyNotification(String url){
-        Log.d(TAG, "Prepping Notification");
 
         String[] params = parseQueryString(url).get("listings").split(",");
         String alertBody = null;
@@ -370,7 +363,6 @@ public class PushListener extends Application implements BootstrapNotifier, Rang
 
     @Override
     public void didRangeBeaconsInRegion(Collection<Beacon> arg0, Region arg1){
-        Log.d(TAG, "Did Range");
         if (arg0.size() > 0){
             sendNotificationWithRegion(arg1);
         }

@@ -17,7 +17,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -229,8 +228,6 @@ public class MyCSP extends Activity implements
         });
 
         final int[] imgArray = { R.drawable.background, R.drawable.scroll_b, R.drawable.scroll_a, R.drawable.scroll_c };
-
-        Log.v(TAG, "index: "+imgPos);
 
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
